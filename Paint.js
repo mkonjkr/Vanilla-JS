@@ -1,3 +1,107 @@
+'use strict';
+
+const canvas = document.getElementById("jsCanvas");
+const ctx = canvas.getContext('2d');
+
+const color = document.getElementsByClassName("jsColor");
+const range = document.getElementById("jsRange");
+const mode = document.getElementById("jsMode");
+
+const INITIAL_COLOR = "#2c2c2c";
+const CANVAS_SIZE = 700;
+
+canvas.width = CANVAS_SIZE;
+canvas.height = CANVAS_SIZE;
+
+ctx.fillStyle = "white";
+ctx.fillRect(0,0,CANVAS_SIZE, CANVAS_SIZE);
+
+ctx.strokeStyle = INITIAL_COLOR;
+ctx.fillStyle = INITIAL_COLOR;
+ctx.lineWidth = 2.5;
+
+let painting = false;
+let filling = false;
+
+
+
+const onMouseMove = (e) =>{
+    const x = e.offsetX;
+    const y = e.offsetY;
+
+    if (!painting) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    } else {
+        ctx.lineTo(x,y);
+        ctx.stroke();
+    }
+}
+
+
+const onMouseUp = () => {
+    painting = false;
+}
+
+const onMouseDown = () => {
+    painting = true;
+}
+
+const handColorClick = (e) =>{
+    const color = e.target.style.backgroundColor;
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+}
+
+const handlerangeChange = (e) => {
+    const stroke = e.target.value;
+    ctx.lineWidth = stroke;
+}
+
+const handlemodeChange = (e) => {
+    if(!filling) {
+        filling = true;
+        mode.innerText = "PAINT";
+    } else {
+        filling = false;
+        mode.innerText = "FILL"
+    }
+}
+
+function handleCanvasClick (){
+    if(filling){
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+    }
+}
+
+if(canvas) {
+    canvas.addEventListener("mousemove", onMouseMove);
+    canvas.addEventListener("mouseup", onMouseUp);
+    canvas.addEventListener("mousedown", onMouseDown);
+    canvas.addEventListener("click", handleCanvasClick);
+}
+
+if (range) {
+    range.addEventListener("input", handlerangeChange);
+}
+
+if (mode) {
+    mode.addEventListener("click", handlemodeChange);
+}
+
+Array.from(color).forEach(color => {
+    color.addEventListener("click", handColorClick)
+});
+
+
+
+
+
+
+
+
+
+/*
 const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext('2d');
 const color = document.getElementsByClassName("jsColor");
@@ -105,4 +209,4 @@ if (mode){
 
 if (saveBtn){
     saveBtn.addEventListener("click", handleSaveclick);
-}
+} */
